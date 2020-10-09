@@ -16,6 +16,20 @@ exports.__esModule = true;
 var Lint = require("tslint");
 var ts = require("typescript");
 var tsutils = require("tsutils");
+function isUndefinedNode(node) {
+    return node.kind === ts.SyntaxKind.Identifier && node.getText() === 'undefined';
+}
+function isOptionalParameter(node) {
+    var isQuestion = node.kind === ts.SyntaxKind.QuestionToken;
+    var parent = node.parent;
+    if (!isQuestion || !parent)
+        return false;
+    var children = parent.getChildren();
+    if (children.length === 0)
+        return false;
+    var colon = children.find(function (child) { return child.kind === ts.SyntaxKind.ColonToken; });
+    return !!colon;
+}
 // A class name with Rule must be exported by Rule files, and it must extend `Lint.Rules.AbstractRule`.
 var Rule = /** @class */ (function (_super) {
     __extends(Rule, _super);
@@ -29,7 +43,7 @@ var Rule = /** @class */ (function (_super) {
     // This provides configuration and information about what the Rule does and the settings to expect.
     Rule.metadata = {
         // The name of the Rule in kebab-case, this is what users will provided in tslint.json at the "rules" section to add this Rule to the project.
-        ruleName: "undefined-or-null-option",
+        ruleName: "no-undefined-or-null",
         // Describes what the Rule does.
         description: "Enforces Null or Undefined types to be of type Option.",
         optionsDescription: "Not configurable.",
@@ -50,7 +64,7 @@ var ClassNamePascalCaseWalker = /** @class */ (function (_super) {
     ClassNamePascalCaseWalker.prototype.walk = function (sourceFile) {
         var _this = this;
         var cb = function (node) {
-            if (tsutils.isNullLiteral(node)) {
+            if (tsutils.isNullLiteral(node) || isUndefinedNode(node) || isOptionalParameter(node)) {
                 _this.addFailureAtNode(node, Rule.FAILURE_STRING);
             }
             return ts.forEachChild(node, cb);
