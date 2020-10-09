@@ -13,15 +13,11 @@ class _Result<T, E> {
     }
 }
 
-type Result<T, E> = _Result<T, E>;
-function Ok<T, E> (value: T): Result<T, E> {
+export type Result<T, E> = _Result<T, E>;
+export function Ok<T, E> (value: T): Result<T, E> {
     return new _Result<T, E>(value, OkType);
 }
 
-function Err<T, E> (error: T): Result<T, E> {
+export function Err<T, E> (error: T): Result<T, E> {
     return new _Result<T, E>(error, ErrorType);
-}
-
-function test (value: string): Result<string, Error> {
-    return value ? Ok<string, Error>(value) : Err<string, Error>('err');
 }

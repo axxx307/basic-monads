@@ -1,13 +1,16 @@
 {
-  "name": "monad",
+  "name": "js-basic-monad",
   "version": "1.0.1",
   "description": "",
-  "main": "rules/index.js",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "files": ["lib/"],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc -p tsconfig.json"
   },
   "author": "Mark Parfenov",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^14.11.8",
     "tslint": "^6.1.3",
